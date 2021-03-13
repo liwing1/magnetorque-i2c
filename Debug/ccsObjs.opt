@@ -1,0 +1,1 @@
+"./magnetorquer.obj" "./libs/clock.obj" "./libs/gpio.obj" "./libs/pwm.obj" "./libs/spi.obj" "../lnk_msp430fr5994.cmd" -llibmpu_init.a -llibmath.a -llibc.a 

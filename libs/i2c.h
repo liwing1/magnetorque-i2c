@@ -1,5 +1,5 @@
-#ifndef __SPI_H
-#define __SPI_H
+#ifndef __I2C_H
+#define __I2C_H
 
 #define ECHO_CMD                0x00
 #define STATS_CMD               0x20
@@ -7,6 +7,10 @@
 #define TIMED_CMD               0x80
 #define PERIODIC_CMD            0xC0
 
-void spiInit();
+#define SLV_ADDR                0x12
+#define MST_ADDR                0x14
+#define BAUD_100                100
 
-#endif  // __SPI_H
+void i2cInit( void );
+
+#endif  // __I2C_H

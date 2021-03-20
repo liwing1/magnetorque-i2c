@@ -1,6 +1,6 @@
+#include <libs/i2c.h>
 #include <msp430.h> 
 #include <stdint.h>
-#include "spi.h"
 #include "pwm.h"
 #include "gpio.h"
 
@@ -8,35 +8,29 @@ uint8_t cmd[6];
 extern mag_t mag;
 
 /*
- *  SPI Configuration
+ *  I2C Configuration
  */
-void spiInit()
+void i2cInit( void )
 {
-    UCB0CTLW0  =  UCSWRST;                  // Reset interface
+    UCB1CTLW0 =  UCSWRST;                  // Reset interface
 
-    UCB0CTLW0 |=  UCCKPH_0 |                // Clock Phase = 0
-                  UCCKPL_1 |                // Clock Polarity = 1
-                  UCMSB_1  |                // MSB first
-                  UCMST_0  |                // Slave mode
-                  UCMODE_2 |                // 4-pin SPI, with STE active low
-                  UCSYNC_1;                 // Synchronous
+    UCB1CTLW0 |=  UCSYNC | UCMODE_3 | UCMST__SLAVE;
 
-    /* SPI Pins */
-    P1SEL1 |=  (BIT6 | BIT7);               // P1.6 (MOSI)
-    P1SEL0 &= ~(BIT6 | BIT7);               // P1.7 (MISO)
+    UCB1BRW = BAUD_100;
 
-    P2SEL1 |=  (BIT2);                      // P2.2 (SCLK)
-    P2SEL0 &= ~(BIT2);                      //
+    UCB1I2COA0 = UCOAEN | SLV_ADDR;
 
-    P3SEL1 |=  (BIT7);                      // P3.7 (STEN)
-    P3SEL0 &= ~(BIT7);                      //
+    /* I2C Pins */
+    P5DIR  &= ~(BIT1 | BIT0);
+    P5SEL1 &= ~(BIT1 | BIT0);            // P5.0 (SDA)
+    P5SEL0 |= BIT1 | BIT0;               // P5.1 (SCK)
+    P5REN  |= BIT1 | BIT0;
+    P5OUT  |= BIT1 | BIT0;
 
-    // Estou usando temporariamente a interface B1 ja que a B0 nao esta disponivel na launchpad
-//    P5SEL0 |=  (BIT0 | BIT1 | BIT2 | BIT3);
 
-    UCB0CTLW0 &= ~UCSWRST;                  // Release reset
+    UCB1CTLW0 &= ~UCSWRST;                  // Release reset
 
-    UCB0IE     =  UCRXIE;                   // Enable RX interruptions
+    UCB1IE     =  UCRXIE;                   // Enable RX interruptions
 }
 
 uint32_t timeOn, period;
@@ -45,26 +39,26 @@ uint8_t  direction;
 
 enum {byte1, byte2, byte3, byte4, byte5, byte6} rxState = byte1;
 
-#pragma vector = EUSCI_B0_VECTOR
-__interrupt void SPI_ISR()
+#pragma vector = EUSCI_B1_VECTOR
+__interrupt void I2C_ISR()
 {
     if(rxState == byte1)
     {
-        cmd[0] = UCB0RXBUF;
+        cmd[0] = UCB1RXBUF;
 
         /* Idle byte */
         if(cmd[0] == 0xFF)
         {
-            //while(!(UCB0IFG & UCTXIFG));
-            UCB0TXBUF = 0xFF;
+            //while(!(UCB1IFG & UCTXIFG));
+            UCB1TXBUF = 0xFF;
             return;
         }
 
         /* Echo */
         if( (cmd[0] & 0xE0) == ECHO_CMD)
         {
-            //while(!(UCB0IFG & UCTXIFG));
-            UCB0TXBUF = cmd[0];
+            //while(!(UCB1IFG & UCTXIFG));
+            UCB1TXBUF = cmd[0];
             return;
         }
 
@@ -89,8 +83,8 @@ __interrupt void SPI_ISR()
 
     if(rxState == byte2)
     {
-        cmd[1] = UCB0RXBUF;
-        int8_t intensity = (int8_t) UCB0RXBUF;
+        cmd[1] = UCB1RXBUF;
+        int8_t intensity = (int8_t) UCB1RXBUF;
 
         /* Coil Control, Timed and Periodic Actuation */
 
@@ -168,14 +162,14 @@ __interrupt void SPI_ISR()
 
     if(rxState == byte3)
     {
-        cmd[2] = UCB0RXBUF;
+        cmd[2] = UCB1RXBUF;
         rxState = byte4;
         return;
     }
 
     if(rxState == byte4)
     {
-        cmd[3] = UCB0RXBUF;
+        cmd[3] = UCB1RXBUF;
 
         /* Convert time to seconds */
         timeOn = (cmd[2] << 8) | cmd[3];            // Seconds
@@ -197,7 +191,7 @@ __interrupt void SPI_ISR()
 
     if(rxState == byte5)
     {
-        cmd[4] = UCB0RXBUF;
+        cmd[4] = UCB1RXBUF;
         rxState = byte6;
         return;
     }
@@ -205,7 +199,7 @@ __interrupt void SPI_ISR()
 
     if(rxState == byte6)
     {
-        cmd[5] = UCB0RXBUF;
+        cmd[5] = UCB1RXBUF;
 
         /* Convert time to seconds */
         period = (cmd[4] << 8) | cmd[5];                // Seconds

@@ -1,8 +1,7 @@
 #ifndef __CLOCK_H
 #define __CLOCK_H
 
-#define FLLN(x) ((x)-1)
-
+// Expose clockInit function
 void clockInit();
 
-#endif  // __CLOCK_H
+#endif //__CLOCK_H

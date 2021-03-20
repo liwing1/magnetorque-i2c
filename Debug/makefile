@@ -13,8 +13,9 @@ ORDERED_OBJS += \
 "./magnetorquer.obj" \
 "./libs/clock.obj" \
 "./libs/gpio.obj" \
+"./libs/i2c.obj" \
+"./libs/my_i2c.obj" \
 "./libs/pwm.obj" \
-"./libs/spi.obj" \
 "../lnk_msp430fr5994.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibmpu_init.a \
@@ -162,8 +163,8 @@ magnetorquer-i2c.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "magnetorquer.obj" "libs\clock.obj" "libs\gpio.obj" "libs\pwm.obj" "libs\spi.obj" 
-	-$(RM) "magnetorquer.d" "libs\clock.d" "libs\gpio.d" "libs\pwm.d" "libs\spi.d" 
+	-$(RM) "magnetorquer.obj" "libs\clock.obj" "libs\gpio.obj" "libs\i2c.obj" "libs\my_i2c.obj" "libs\pwm.obj" 
+	-$(RM) "magnetorquer.d" "libs\clock.d" "libs\gpio.d" "libs\i2c.d" "libs\my_i2c.d" "libs\pwm.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

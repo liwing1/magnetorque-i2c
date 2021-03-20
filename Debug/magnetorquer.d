@@ -1,6 +1,7 @@
 # FIXED
 
 magnetorquer.obj: ../magnetorquer.c
+magnetorquer.obj: D:/Users/liwka/Documents/LODESTAR/magnetorquer-i2c/libs/i2c.h
 magnetorquer.obj: D:/ti/ccs1020/ccs/ccs_base/msp430/include/msp430.h
 magnetorquer.obj: D:/ti/ccs1020/ccs/ccs_base/msp430/include/msp430fr5994.h
 magnetorquer.obj: D:/ti/ccs1020/ccs/ccs_base/msp430/include/in430.h
@@ -17,12 +18,13 @@ magnetorquer.obj: D:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.4.LTS/incl
 magnetorquer.obj: D:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.4.LTS/include/machine/_types.h
 magnetorquer.obj: D:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.4.LTS/include/machine/_stdint.h
 magnetorquer.obj: D:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.4.LTS/include/sys/_stdint.h
-magnetorquer.obj: ../libs/spi.h
 magnetorquer.obj: ../libs/clock.h
 magnetorquer.obj: ../libs/gpio.h
 magnetorquer.obj: ../libs/pwm.h
+magnetorquer.obj: ../libs/my_i2c.h
 
 ../magnetorquer.c: 
+D:/Users/liwka/Documents/LODESTAR/magnetorquer-i2c/libs/i2c.h: 
 D:/ti/ccs1020/ccs/ccs_base/msp430/include/msp430.h: 
 D:/ti/ccs1020/ccs/ccs_base/msp430/include/msp430fr5994.h: 
 D:/ti/ccs1020/ccs/ccs_base/msp430/include/in430.h: 
@@ -39,7 +41,7 @@ D:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.4.LTS/include/sys/_types.h:
 D:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.4.LTS/include/machine/_types.h: 
 D:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.4.LTS/include/machine/_stdint.h: 
 D:/ti/ccs1020/ccs/tools/compiler/ti-cgt-msp430_20.2.4.LTS/include/sys/_stdint.h: 
-../libs/spi.h: 
 ../libs/clock.h: 
 ../libs/gpio.h: 
 ../libs/pwm.h: 
+../libs/my_i2c.h: 
